@@ -35,4 +35,9 @@ test_that("Unexpected dataset format",{
   )
 })
 
+test_that("popmean works as expected", {
+  dt = data.frame(zone = c("z1","z2"), population =c(50,50), year = 2020, IRS = c(.01,.25))
+  tabmean = popmean(data = dt, intervention = "IRS", years = 2020)
+  expect_equal(tabmean$mean, 0.13)
+})
 
