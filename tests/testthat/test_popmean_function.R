@@ -13,7 +13,7 @@ test_that("Empty dataset", {
 
 })
 
-test_that("Try to deal with an unknow intervention type", {
+test_that("Try to deal with an unknown intervention type", {
 
   tdat <- read_testdata("dat.rds")
 
