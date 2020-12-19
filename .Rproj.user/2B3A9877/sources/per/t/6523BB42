@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1608313402146.000,
+    "dirty" : false,
+    "encoding" : "ISO8859-1",
+    "folds" : "",
+    "hash" : "65777587",
+    "id" : "6523BB42",
+    "lastKnownWriteTime" : 1608242852,
+    "last_content_update" : 1608242852,
+    "path" : "~/Bioinformatician_R_developper/R exercises_candidate.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "100,56",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

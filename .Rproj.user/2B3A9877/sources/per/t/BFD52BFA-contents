@@ -1,0 +1,196 @@
+---
+title: "Exercises: Comp. Statistician / R Developper"
+author: "Cheikh Ndour"
+date: "`r Sys.Date()`"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{arulesPBBC_tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Question task 1
+Transform the dataset below in order to use the plotting code below.
+
+**Explanation:** `none`, `IRS`, `ITN`, `IRS+ITN` are 4 different intervention types.
+The values in the dataset are `PR` (prevalence).
+```{r, eval=FALSE}
+rm(list = ls())
+dat = read.delim(text = "zone	population	year	none	IRS	ITN	IRS+ITN
+Zone 1	692089	2005	0.41	0.40	0.39	0.40
+Zone 1	692089	2006	0.37	0.35	0.35	0.35
+Zone 1	692089	2007	0.31	0.29	0.29	0.29
+Zone 1	692089	2008	0.28	0.26	0.26	0.26
+Zone 1	692089	2009	0.25	0.22	0.23	0.22
+Zone 1	692089	2010	0.19	0.17	0.18	0.18
+Zone 1	692089	2011	0.15	0.13	0.13	0.14
+Zone 1	692089	2012	0.11	0.10	0.10	0.10
+Zone 1	692089	2013	0.10	0.09	0.08	0.09
+Zone 1	692089	2014	0.12	0.11	0.11	0.12
+Zone 1	692089	2015	0.16	0.16	0.16	0.17
+Zone 1	692089	2016	0.20	0.21	0.22	0.21
+Zone 1	692089	2017	0.24	0.24	0.26	0.25
+Zone 1	692089	2018	0.18	0.18	0.18	0.18
+Zone 1	692089	2019	0.09	0.09	0.08	0.09
+Zone 1	692089	2020	0.09	0.09	0.07	0.07
+Zone 1	692089	2021	0.13	0.08	0.08	0.06
+Zone 1	692089	2022	0.18	0.07	0.10	0.05
+Zone 2	324469	2005	0.26	0.26	0.26	0.26
+Zone 2	324469	2006	0.21	0.20	0.20	0.20
+Zone 2	324469	2007	0.16	0.15	0.15	0.15
+Zone 2	324469	2008	0.12	0.13	0.12	0.12
+Zone 2	324469	2009	0.09	0.10	0.09	0.09
+Zone 2	324469	2010	0.07	0.07	0.07	0.07
+Zone 2	324469	2011	0.04	0.05	0.04	0.04
+Zone 2	324469	2012	0.03	0.03	0.03	0.03
+Zone 2	324469	2013	0.02	0.03	0.03	0.02
+Zone 2	324469	2014	0.03	0.03	0.03	0.03
+Zone 2	324469	2015	0.05	0.05	0.05	0.05
+Zone 2	324469	2016	0.09	0.09	0.09	0.09
+Zone 2	324469	2017	0.11	0.11	0.11	0.11
+Zone 2	324469	2018	0.10	0.10	0.10	0.10
+Zone 2	324469	2019	0.05	0.05	0.05	0.05
+Zone 2	324469	2020	0.05	0.05	0.04	0.04
+Zone 2	324469	2021	0.07	0.04	0.04	0.03
+Zone 2	324469	2022	0.10	0.03	0.05	0.02", sep = "\t", header = T)
+
+plot1 = ggplot( dat2 ) +
+  geom_line(aes(y = PR, x = year, group = intervention , col = intervention), lwd = 1.5) +
+  facet_wrap(~ zone ) +
+  theme_minimal() +
+  scale_color_viridis_d( end = .9, begin = .2)
+
+print( plot1 )
+```
+
+
+## Response task 1
+```{r}
+library(ggplot2)
+library(reshape2)
+dat2 = melt(data = dat,
+            id.vars = c("zone", "population", "year"),
+            variable.name = "intervention", 
+            value.name = "PR"
+) 
+
+plot1 = ggplot( dat2 ) +
+  geom_line(aes(y = PR, x = year, group = intervention , col = intervention), lwd = 1.5) +
+  facet_wrap(~ zone ) +
+  theme_minimal() +
+  scale_color_viridis_d( end = .9, begin = .2)
+
+print( plot1 )
+```
+
+
+## Question task 2
+The dataset 'dat' contains prevalence values for a country with two zones.
+Your task is to write a custom function that outputs the national prevalence
+(population-weighted mean of the two zones), by year and by intervention.
+Then use the function to compute the values for each intervention from 2020:2022.
+
+**Examples:**
+
+`popmean( dat, intervention = "IRS", years = 2020:2022)`
+
+`popmean( dat, intervention = "ITN", years = 2020:2022)`
+
+## Response task 2
+```{r}
+popmean = function(data, intervention = "IRS", years = 2020:2022){
+  #' calculates the national prevalence by year and by intervention
+  #' @param data a dataset with columns "zone", "population", "year", "none", "IRS", "ITN", "IRS.ITN"
+  #' @param intervention intervention type. It must be one of the following intervention:  "none", "IRS", "ITN", "IRS.ITN".
+  #' @param year a numerical vector. It must contain years for wich the national prevalence have to be calculate.
+  
+  meltData = melt(data = data,
+                  id.vars = c("zone", "population", "year"),
+                  variable.name = "interventionType", 
+                  value.name = "PR"
+  ) 
+  
+  tabMeans = meltData %>% 
+    filter(interventionType == intervention, year %in% years) %>% 
+    group_by(year, interventionType) %>%
+    summarise(mean = sum(PR*population)/sum(population)) %>%
+    rename(intervention = interventionType) %>%
+    data.frame()
+  
+  return(tabMeans)
+}
+```
+```{r, warning=FALSE, message=FALSE}
+library(dplyr)
+lapply(X = c("none", "IRS", "ITN", "IRS.ITN"), function(xType){
+  popmean( dat, intervention = xType, years = 2020:2022)
+})
+```
+## Question task 3
+ - Debug and format according to coding best practices the 'p_reduct' function below,
+and use it on the 'dat3' object.
+
+- run the following lines to include this function in your 'global environment'
+
+```{r, eval=FALSE}
+p_reduct = function( dat3 , baseyear, print = F ){
+  #' calculates the percent reduction based on some baseyear
+  #' @param baseyear a year against which to make comparisons
+  #' @param dat a dataset with columns "value" and "year"
+
+  dat3 = dat3 %>%  mutate(
+    redu = ( value[ year == basyear ] - value ) / value[ year == baseyear ]
+  )
+
+  if(print) print(dat2)
+  return( dat3 )
+}
+```
+- use the `p_reduct` function on this object
+```{r,eval=FALSE}
+dat3 = cbind.data.frame( PR = sort( signif( runif(11,0,100), 3),decreasing = T)
+                         , year = 2020:2030 )
+```
+- notice that the function fails to run
+```{r, eval=FALSE}
+p_reduct( dat3, baseyear = 2020, print = T)
+```
+Question: how do you change the code so it works?
+
+## Response task 3
+```{r, eval=TRUE}
+p_reduct = function(dat3 , baseyear, print = F ){
+  #' calculates the percent reduction based on some baseyear
+  #' @param baseyear a year against which to make comparisons
+  #' @param dat3 a dataset with columns "value" and "year"       # dat3 instead of dat
+  
+  # Error message if column names do not match with "value" and "year".
+  if(!all(colnames(dat3) %in% c("value", "year"))) stop("the column names of the dataset should be 'value' and 'year'")
+  
+  dat3 = dat3 %>%  mutate(
+    redu = ( value[ year == baseyear ] - value ) / value[ year == baseyear ] ## baseyear instead of basyear
+  )
+  
+  if(print) print(dat3)  ## dat3 instead of dat2
+  return( dat3 )
+}
+```
+
+```{r}
+dat3 = cbind.data.frame( value = sort( signif( runif(11,0,100), 3),decreasing = T)
+                         , year = 2020:2030 )
+p_reduct( dat3, baseyear = 2020, print = T)
+```
+## Question task 4
+- Put the function from task 2 in a R file.
+- Add unit test(s) for your function. i.e. create a separate file with unit tests - any test library is fine. If you're not sure, use testthat.
+- Create a small Gitlab project containing an R script with the link to your project in the answer line.
+
+## Response task 4

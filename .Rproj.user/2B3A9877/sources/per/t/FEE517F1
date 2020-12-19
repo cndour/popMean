@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1608315699613.000,
+    "dirty" : false,
+    "encoding" : "ISO8859-1",
+    "folds" : "",
+    "hash" : "891942393",
+    "id" : "FEE517F1",
+    "lastKnownWriteTime" : 1608381362,
+    "last_content_update" : 1608381362369,
+    "path" : "C:/git/popMeanRepository/popMean/tests/testthat/test_popmean_function.R",
+    "project_path" : "tests/testthat/test_popmean_function.R",
+    "properties" : {
+        "cursorPosition" : "3,1",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

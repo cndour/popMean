@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1608316905710.000,
+    "dirty" : false,
+    "encoding" : "ISO8859-1",
+    "folds" : "",
+    "hash" : "1178900240",
+    "id" : "BFD52BFA",
+    "lastKnownWriteTime" : 1608300895,
+    "last_content_update" : 1608300895,
+    "path" : "~/Bioinformatician_R_developper/questionResponses.Rmd",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
